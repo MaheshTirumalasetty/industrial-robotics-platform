@@ -21,9 +21,13 @@ jobs:
         run: pip install -r requirements-dev.txt
 
       - name: Lint
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: ruff check api tests
 
       - name: Test
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: pytest -q
 
       - name: Build API container
