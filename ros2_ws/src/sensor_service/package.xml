@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>sensor_service</name>
+  <version>0.1.0</version>
+  <description>Simulated manufacturing sensor publisher.</description>
+  <maintainer email="platform@example.com">Platform Engineering</maintainer>
+  <license>Apache-2.0</license>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <buildtool_depend>ament_python</buildtool_depend>
+  <export><build_type>ament_python</build_type></export>
+</package>

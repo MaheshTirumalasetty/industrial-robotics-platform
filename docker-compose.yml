@@ -1,0 +1,11 @@
+services:
+  manufacturing-api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    environment:
+      SERVICE_NAME: manufacturing-api
+      ENVIRONMENT: docker-compose
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
