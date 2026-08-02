@@ -59,6 +59,14 @@ jobs:
             -f docker/api.Dockerfile \
             -t ghcr.io/${{ steps.image.outputs.name }}:${{ github.sha }} \
             .
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Helm Lint
+        run: helm lint helm/manufacturing-api
+
+      - name: Helm Template
+        run: helm template manufacturing-api helm/manufacturing-api
 
       - name: Push Docker image
         if: github.event_name != 'pull_request'
