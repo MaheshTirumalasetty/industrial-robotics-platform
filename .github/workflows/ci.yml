@@ -59,6 +59,7 @@ jobs:
             -f docker/api.Dockerfile \
             -t ghcr.io/${{ steps.image.outputs.name }}:${{ github.sha }} \
             .
+
       - name: Install Helm
         uses: azure/setup-helm@v4
 
@@ -72,3 +73,27 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           docker push ghcr.io/${{ steps.image.outputs.name }}:${{ github.sha }}
+
+      - name: Azure Login
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS Context
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: azure/aks-set-context@v4
+        with:
+          resource-group: ${{ secrets.AKS_RESOURCE_GROUP }}
+          cluster-name: ${{ secrets.AKS_CLUSTER_NAME }}
+
+      - name: Deploy to AKS with Helm
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          helm upgrade --install manufacturing-api ./helm/manufacturing-api \
+            --namespace industrial-robotics \
+            --create-namespace \
+            --set image.repository=ghcr.io/${{ steps.image.outputs.name }} \
+            --set-string image.tag=${{ github.sha }} \
+            --atomic \
+            --timeout 5m
