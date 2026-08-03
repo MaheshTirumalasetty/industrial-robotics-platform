@@ -31,6 +31,18 @@ def health() -> dict:
         "environment": ENVIRONMENT,
     }
 
+@app.get("/cpu-load")
+def cpu_load() -> dict:
+    start = time.time()
+
+    while time.time() - start < 10:
+        pass
+
+    return {
+        "status": "completed",
+        "duration_seconds": 10,
+        "message": "CPU load generated",
+    }
 
 @app.get("/status", response_model=PlatformStatus)
 def status() -> PlatformStatus:
